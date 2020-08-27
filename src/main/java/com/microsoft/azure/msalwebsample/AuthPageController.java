@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+  // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 package com.microsoft.azure.msalwebsample;
@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.microsoft.aad.msal4j.*;
+import com.microsoft.azure.msalwebsample.config.AuthHelper;
+import com.microsoft.azure.msalwebsample.config.AuthScope;
+import com.microsoft.azure.msalwebsample.config.SessionManagementHelper;
 import com.nimbusds.jwt.JWTParser;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +38,10 @@ public class AuthPageController {
     @RequestMapping("/msal4jsample")
     public String homepage(){
         return "index";
+        
     }
 
+    
     @RequestMapping("/msal4jsample/secure/aad")
     public ModelAndView securePage(HttpServletRequest httpRequest) throws ParseException {
         ModelAndView mav = new ModelAndView("auth_page");

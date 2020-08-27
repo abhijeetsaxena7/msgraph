@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-package com.microsoft.azure.msalwebsample;
+package com.microsoft.azure.msalwebsample.config;
 
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Helpers for managing session
  */
-class SessionManagementHelper {
+public class SessionManagementHelper {
 
     static final String STATE = "state";
     private static final String STATES = "states";
@@ -63,7 +63,7 @@ class SessionManagementHelper {
         }
     }
 
-    static void storeStateAndNonceInSession(HttpSession session, String state, String nonce) {
+    public static void storeStateAndNonceInSession(HttpSession session, String state, String nonce) {
 
         // state parameter to validate response from Authorization server and nonce parameter to validate idToken
         if (session.getAttribute(STATES) == null) {
@@ -84,7 +84,7 @@ class SessionManagementHelper {
         httpRequest.getSession().removeAttribute(AuthHelper.PRINCIPAL_SESSION_NAME);
     }
 
-    static IAuthenticationResult getAuthSessionObject(HttpServletRequest request) {
+    public static IAuthenticationResult getAuthSessionObject(HttpServletRequest request) {
         Object principalSession = request.getSession().getAttribute(AuthHelper.PRINCIPAL_SESSION_NAME);
         if(principalSession instanceof IAuthenticationResult){
             return (IAuthenticationResult) principalSession;

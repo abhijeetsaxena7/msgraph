@@ -30,6 +30,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
+import com.microsoft.azure.msalwebsample.config.AuthHelper;
+import com.microsoft.azure.msalwebsample.config.AuthScope;
+import com.microsoft.azure.msalwebsample.config.HelperMethods;
 import com.microsoft.graph.authentication.IAuthenticationProvider;
 import com.microsoft.graph.http.IHttpRequest;
 import com.microsoft.graph.models.extensions.AppRole;
@@ -37,6 +40,8 @@ import com.microsoft.graph.models.extensions.AppRoleAssignment;
 import com.microsoft.graph.models.extensions.DirectoryObject;
 import com.microsoft.graph.models.extensions.Group;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
+import com.microsoft.graph.models.extensions.MeetingParticipantInfo;
+import com.microsoft.graph.models.extensions.MeetingParticipants;
 import com.microsoft.graph.models.extensions.OnlineMeeting;
 import com.microsoft.graph.models.extensions.PasswordProfile;
 import com.microsoft.graph.models.extensions.Team;
@@ -83,6 +88,7 @@ public class TestController implements IAuthenticationProvider {
 			onlineMeeting.endDateTime = end;
 			
 			onlineMeeting.subject = "Test meeting 2";
+			MeetingParticipants mp = new MeetingParticipants();
 			
 //			IUserRequestBuilder req = graphClient.me();
 //			req.onlineMeetings().req
@@ -135,7 +141,7 @@ public class TestController implements IAuthenticationProvider {
 	
 	@GetMapping("/user")
 	public User createUser(HttpServletRequest request, HttpServletResponse response) {
-		try {
+		try {			
 			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response,"https://graph.microsoft.com/User.ReadWrite.All","https://graph.microsoft.com/Directory.ReadWrite.All","https://graph.microsoft.com/Directory.AccessAsUser.All");
 			IGraphServiceClient graphClient = GraphServiceClient.builder().authenticationProvider(this).buildClient();
 			
@@ -237,7 +243,7 @@ public class TestController implements IAuthenticationProvider {
 		additionalData.put("group@odata.bind", new JsonPrimitive("https://graph.microsoft.com/v1.0/groups/902e46a0-471f-4e41-9c33-77abae63245d"));
 		additionalData.put("template@odata.bind", new JsonPrimitive("https://graph.microsoft.com/1.0/teamsTemplates/standard"));
 		team.additionalDataManager().putAll(additionalData);
-		
+		graphClient.groups("").team().buildRequest().
 		
 		HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());
 //		ITeamRequest req = graphClient.groups("902e46a0-471f-4e41-9c33-77abae63245d").team().buildRequest(Arrays.asList(option));

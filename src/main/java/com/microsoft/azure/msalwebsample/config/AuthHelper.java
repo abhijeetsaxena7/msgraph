@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-package com.microsoft.azure.msalwebsample;
+package com.microsoft.azure.msalwebsample.config;
+
+import static com.microsoft.azure.msalwebsample.config.SessionManagementHelper.FAILED_TO_VALIDATE_MESSAGE;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -42,13 +44,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.microsoft.azure.msalwebsample.SessionManagementHelper.FAILED_TO_VALIDATE_MESSAGE;
-
 /**
  * Helpers for acquiring authorization codes and tokens from AAD
  */
 @Component
-class AuthHelper {
+public class AuthHelper {
 
 	static final String PRINCIPAL_SESSION_NAME = "principal";
 	static final String TOKEN_CACHE_SESSION_ATTRIBUTE = "token_cache";
@@ -62,6 +62,8 @@ class AuthHelper {
 	private IGraphServiceClient graphServiceClient;
 	@Autowired
 	BasicConfiguration configuration;
+	@Autowired
+	HelperMethods helper;
 
 	@PostConstruct
 	public void init() {
@@ -106,7 +108,7 @@ class AuthHelper {
 		}
 	}
 
-	IAuthenticationResult getAuthResultBySilentFlow(HttpServletRequest httpRequest, HttpServletResponse httpResponse, String...scopes)
+	public IAuthenticationResult getAuthResultBySilentFlow(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Set<String>scopes)
 			throws Throwable {
 
 		IAuthenticationResult result = SessionManagementHelper.getAuthSessionObject(httpRequest);
@@ -116,15 +118,9 @@ class AuthHelper {
 		Object tokenCache = httpRequest.getSession().getAttribute("token_cache");
 		if (tokenCache != null) {
 			app.tokenCache().deserialize(tokenCache.toString());
-		}
+		}		
 		
-		Set<String> scopeSet = new HashSet<>();
-		if(scopes.length>0) {
-			for(String scope:scopes) {
-				scopeSet.add(scope);
-			}
-		}
-		SilentParameters parameters = SilentParameters.builder(scopeSet, result.account())
+		SilentParameters parameters = SilentParameters.builder(scopes, result.account())
 				.build();
 		CompletableFuture<IAuthenticationResult> future = app.acquireTokenSilently(parameters);
 		IAuthenticationResult updatedResult = future.get();
@@ -168,35 +164,19 @@ class AuthHelper {
 		httpResponse.sendRedirect(authorizationCodeUrl);
 	}
 
-	String getAuthorizationCodeUrl(String claims, String scope, String registeredRedirectURL, String state,
+	public String getAuthorizationCodeUrl(String claims, String scope, String registeredRedirectURL, String state,
 			String nonce) throws UnsupportedEncodingException {
-
-		scope = "onlinemeetings.readwrite";
-		String urlEncodedScopes = scope == null ? "" : URLEncoder.encode(scope, "UTF-8");
-		
-		Set<String> scopes = new HashSet<>();
-//		scopes.add("user.read");
-//		scopes.add("onlinemeeting.readwrite");
-		scopes.add("group.readwrite.all");
-		scopes.add("directory.readwrite.all");
-		scopes.add("directory.accessasuser.all");
-		scopes.add("user.readwrite.all");
-		scopes.add("groupMember.readwrite.all");
 		
 		AuthorizationRequestUrlParameters parameters = AuthorizationRequestUrlParameters
-				.builder(registeredRedirectURL, /*Collections.singleton(urlEncodedScopes)*/ scopes)
+				.builder(registeredRedirectURL, getAllScopes())
 				.responseMode(ResponseMode.QUERY).prompt(Prompt.SELECT_ACCOUNT).state(state).nonce(nonce)
 				.claimsChallenge(claims).build();
-
-//		PublicClientApplication pca = PublicClientApplication.builder(clientId).build();
-		
 		
 		ConfidentialClientApplication cca = null;
 		try {
 			cca = createClientApplication();
 			return cca.getAuthorizationRequestUrl(parameters).toString();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
@@ -238,16 +218,32 @@ class AuthHelper {
 	private static boolean isAuthenticationSuccessful(AuthenticationResponse authResponse) {
 		return authResponse instanceof AuthenticationSuccessResponse;
 	}
+	
+	public Set<String>getAllScopes() {
+		Set<String> scopes = new HashSet<String>();
+		scopes.addAll(helper.getAuthScopes(AuthScope.User.Create.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.User.Update.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.User.Delete.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.Group.Create.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.Group.Delete.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.Group.AddMember.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.Group.AddOwner.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.Group.DeleteMember.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.Group.DeleteOwner.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.Meeting.Create.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.Meeting.Delete.values()));
+		return scopes;
+	}
 
-	String getRedirectUriSignIn() {
+	public String getRedirectUriSignIn() {
 		return redirectUriSignIn;
 	}
 
-	String getRedirectUriGraph() {
+	public String getRedirectUriGraph() {
 		return redirectUriGraph;
 	}
 
-	String getMsGraphEndpointHost() {
+	public String getMsGraphEndpointHost() {
 		return msGraphEndpointHost;
 	}
 

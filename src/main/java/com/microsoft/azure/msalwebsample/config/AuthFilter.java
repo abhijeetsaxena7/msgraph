@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-package com.microsoft.azure.msalwebsample;
+package com.microsoft.azure.msalwebsample.config;
 
 import java.io.IOException;
 import java.util.*;
@@ -114,7 +114,7 @@ public class AuthFilter implements Filter {
 
     private void updateAuthDataUsingSilentFlow(HttpServletRequest httpRequest, HttpServletResponse httpResponse)
             throws Throwable {
-        IAuthenticationResult authResult = authHelper.getAuthResultBySilentFlow(httpRequest, httpResponse);
+        IAuthenticationResult authResult = authHelper.getAuthResultBySilentFlow(httpRequest, httpResponse, new HashSet<String>());
         SessionManagementHelper.setSessionPrincipal(httpRequest, authResult);
     }
 }

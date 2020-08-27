@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-package com.microsoft.azure.msalwebsample;
+package com.microsoft.azure.msalwebsample.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -12,11 +12,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties("aad")
-class BasicConfiguration {
+public class BasicConfiguration {
 
     private String clientId;
     private String authority;
     private String redirectUriSignin;
+    private String redirectResponseUri; 
     private String redirectUriGraph;
     private String secretKey;
     private String msGraphEndpointHost;
@@ -71,4 +72,14 @@ class BasicConfiguration {
     public String getMsGraphEndpointHost(){
         return msGraphEndpointHost;
     }
+
+	public String getRedirectResponseUri() {
+		return redirectResponseUri;
+	}
+
+	public void setRedirectResponseUri(String redirectResponseUri) {
+		this.redirectResponseUri = redirectResponseUri;
+	}
+    
+    
 }

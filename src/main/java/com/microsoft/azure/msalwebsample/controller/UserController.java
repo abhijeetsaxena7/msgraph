@@ -17,6 +17,7 @@ import com.microsoft.azure.msalwebsample.config.AuthScope;
 import com.microsoft.azure.msalwebsample.config.GraphServiceClientWrapper;
 import com.microsoft.azure.msalwebsample.config.HelperMethods;
 import com.microsoft.azure.msalwebsample.model.UserModel;
+import com.microsoft.graph.models.extensions.AppRoleAssignment;
 import com.microsoft.graph.models.extensions.PasswordProfile;
 import com.microsoft.graph.models.extensions.User;
 import com.microsoft.graph.options.HeaderOption;
@@ -44,13 +45,12 @@ public class UserController {
 			passwordProfile.password = userModel.getDefaultPassword();
 			user.passwordProfile = passwordProfile;
 			user.department = userModel.getDepartment();						
-			user.birthday= userModel.getDob();
+			user.birthday= userModel.getDob();			
 			
 			HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());			
 			IUserCollectionRequest userReq = graphClientWrapper.getGraphServiceClient().users().buildRequest(Arrays.asList(option));
 			
 			User res = userReq.post(user);
-
 			resEntity = new ResponseEntity<User>(res,HttpStatus.CREATED);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -78,4 +78,28 @@ public class UserController {
 		
 		return resEntity;
 	}
+	
+	
+	/*
+	 * public ResponseEntity assignRoleToUser(HttpServletRequest request,
+	 * HttpServletResponse response, @RequestParam String roleId, @RequestParam
+	 * String assignerId, @RequestParam String assignedToId) {
+	 * ResponseEntity<String> resEntity; try { IAuthenticationResult result =
+	 * authHelper.getAuthResultBySilentFlow(request, response,
+	 * helper.getReqScopes(AuthScope.User.AddRole.values()));
+	 * 
+	 * AppRoleAssignment roleAssignment = new AppRoleAssignment();
+	 * roleAssignment.principalId = new UUIDassignedToId; roleAssignment.resourceId
+	 * = assignerId; role
+	 * 
+	 * HeaderOption option = new HeaderOption("Authorization", "Bearer " +
+	 * result.accessToken());
+	 * graphClientWrapper.getGraphServiceClient().users(userId).buildRequest(Arrays.
+	 * asList(option)).delete(); resEntity = new
+	 * ResponseEntity<String>(HttpStatus.NO_CONTENT); } catch (Throwable e) {
+	 * e.printStackTrace(); resEntity = new
+	 * ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR); }
+	 * 
+	 * return resEntity; }
+	 */
 }

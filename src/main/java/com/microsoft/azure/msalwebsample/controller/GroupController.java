@@ -124,7 +124,7 @@ public class GroupController {
 		return resEntity;
 	}
 	
-	@PostMapping("/owner")
+	@DeleteMapping("/owner")
 	public ResponseEntity<String> deleteGroupOwner(HttpServletRequest request, HttpServletResponse response, @RequestParam String groupId, @RequestParam String userId){
 		ResponseEntity<String> resEntity;
 		try {

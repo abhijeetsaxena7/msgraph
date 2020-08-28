@@ -19,7 +19,7 @@ public interface AuthScope {
 	
 	interface User{
 		public enum Create implements BaseScope {
-			User_ReadWrite_All, Directory_ReadWrite_All, Directory_Access_User_All;
+			User_ReadWrite_All, Directory_ReadWrite_All, Directory_AccessAsUser_All;
 		}
 
 		public enum Update implements BaseScope {
@@ -28,6 +28,10 @@ public interface AuthScope {
 		
 		public enum Delete implements BaseScope {
 			Directory_AccessAsUser_All;
+		}
+		
+		public enum AddRole implements BaseScope{
+			AppRoleAssignment_ReadWrite_All, Directory_AccessAsUser_All;
 		}
 	}
 	

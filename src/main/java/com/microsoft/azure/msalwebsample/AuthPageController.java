@@ -63,77 +63,77 @@ public class AuthPageController {
                 URLEncoder.encode(redirectUrl, "UTF-8"));
     }
 
-    @RequestMapping("/msal4jsample/graph/me")
-    public ModelAndView getUserFromGraph(HttpServletRequest httpRequest, HttpServletResponse httpResponse)
-            throws Throwable {
-
-        IAuthenticationResult result;
-        ModelAndView mav;
-        try {
-            result = authHelper.getAuthResultBySilentFlow(httpRequest, httpResponse);
-        } catch (ExecutionException e) {
-            if (e.getCause() instanceof MsalInteractionRequiredException) {
-
-                // If silent call returns MsalInteractionRequired, then redirect to Authorization endpoint
-                // so user can consent to new scopes
-                String state = UUID.randomUUID().toString();
-                String nonce = UUID.randomUUID().toString();
-
-                SessionManagementHelper.storeStateAndNonceInSession(httpRequest.getSession(), state, nonce);
-                String authorizationCodeUrl = authHelper.getAuthorizationCodeUrl(
-                        httpRequest.getParameter("claims"),
-                        "User.Read",
-                        authHelper.getRedirectUriGraph(),
-                        state,
-                        nonce);
-
-                return new ModelAndView("redirect:" + authorizationCodeUrl);
-            } else {
-
-                mav = new ModelAndView("error");
-                mav.addObject("error", e);
-                return mav;
-            }
-        }
-
-        if (result == null) {
-            mav = new ModelAndView("error");
-            mav.addObject("error", new Exception("AuthenticationResult not found in session."));
-        } else {
-            mav = new ModelAndView("auth_page");
-            setAccountInfo(mav, httpRequest);
-
-            try {
-                mav.addObject("userInfo", getUserInfoFromGraph(result.accessToken()));
-
-                return mav;
-            } catch (Exception e) {
-                mav = new ModelAndView("error");
-                mav.addObject("error", e);
-            }
-        }
-        return mav;
-    }
-
-    private String getUserInfoFromGraph(String accessToken) throws Exception {
-        // Microsoft Graph user endpoint
-        URL url = new URL(authHelper.getMsGraphEndpointHost() + "v1.0/me");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set the appropriate header fields in the request header.
-        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-        conn.setRequestProperty("Accept", "application/json");
-
-        String response = HttpClientHelper.getResponseStringFromConn(conn);
-
-        int responseCode = conn.getResponseCode();
-        if(responseCode != HttpURLConnection.HTTP_OK) {
-            throw new IOException(response);
-        }
-
-        JSONObject responseObject = HttpClientHelper.processResponse(responseCode, response);
-        return responseObject.toString();
-    }
+//    @RequestMapping("/msal4jsample/graph/me")
+//    public ModelAndView getUserFromGraph(HttpServletRequest httpRequest, HttpServletResponse httpResponse)
+//            throws Throwable {
+//
+//        IAuthenticationResult result;
+//        ModelAndView mav;
+//        try {
+//            result = authHelper.getAuthResultBySilentFlow(httpRequest, httpResponse);
+//        } catch (ExecutionException e) {
+//            if (e.getCause() instanceof MsalInteractionRequiredException) {
+//
+//                // If silent call returns MsalInteractionRequired, then redirect to Authorization endpoint
+//                // so user can consent to new scopes
+//                String state = UUID.randomUUID().toString();
+//                String nonce = UUID.randomUUID().toString();
+//
+//                SessionManagementHelper.storeStateAndNonceInSession(httpRequest.getSession(), state, nonce);
+//                String authorizationCodeUrl = authHelper.getAuthorizationCodeUrl(
+//                        httpRequest.getParameter("claims"),
+//                        "User.Read",
+//                        authHelper.getRedirectUriGraph(),
+//                        state,
+//                        nonce);
+//
+//                return new ModelAndView("redirect:" + authorizationCodeUrl);
+//            } else {
+//
+//                mav = new ModelAndView("error");
+//                mav.addObject("error", e);
+//                return mav;
+//            }
+//        }
+//
+//        if (result == null) {
+//            mav = new ModelAndView("error");
+//            mav.addObject("error", new Exception("AuthenticationResult not found in session."));
+//        } else {
+//            mav = new ModelAndView("auth_page");
+//            setAccountInfo(mav, httpRequest);
+//
+//            try {
+//                mav.addObject("userInfo", getUserInfoFromGraph(result.accessToken()));
+//
+//                return mav;
+//            } catch (Exception e) {
+//                mav = new ModelAndView("error");
+//                mav.addObject("error", e);
+//            }
+//        }
+//        return mav;
+//    }
+//
+//    private String getUserInfoFromGraph(String accessToken) throws Exception {
+//        // Microsoft Graph user endpoint
+//        URL url = new URL(authHelper.getMsGraphEndpointHost() + "v1.0/me");
+//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//
+//        // Set the appropriate header fields in the request header.
+//        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+//        conn.setRequestProperty("Accept", "application/json");
+//
+//        String response = HttpClientHelper.getResponseStringFromConn(conn);
+//
+//        int responseCode = conn.getResponseCode();
+//        if(responseCode != HttpURLConnection.HTTP_OK) {
+//            throw new IOException(response);
+//        }
+//
+//        JSONObject responseObject = HttpClientHelper.processResponse(responseCode, response);
+//        return responseObject.toString();
+//    }
 
     private void setAccountInfo(ModelAndView model, HttpServletRequest httpRequest) throws ParseException {
         IAuthenticationResult auth = SessionManagementHelper.getAuthSessionObject(httpRequest);

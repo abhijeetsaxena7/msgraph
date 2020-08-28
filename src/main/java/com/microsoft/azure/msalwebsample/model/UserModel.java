@@ -10,6 +10,7 @@ public class UserModel {
 	private Calendar dob;
 	private String department;
 	private String mailNickname;
+	private String roleId;
 	public UserModel() {
 	}
 	public String getDefaultPassword() {

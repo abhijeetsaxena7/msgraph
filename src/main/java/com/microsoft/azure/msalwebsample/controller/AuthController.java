@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,14 @@ public class AuthController {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+		
+//		return request.getHeader(HttpHeaders.COOKIE);
+		
+		
+	}
+	
+	public String getSessionId(HttpServletRequest request) {
+		return request.getHeader(HttpHeaders.COOKIE);
 	}
 
 }

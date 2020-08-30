@@ -1,11 +1,14 @@
 package com.microsoft.azure.msalwebsample.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class OnlineMeetingModel {
+public class OnlineMeetingModel implements Serializable{
+	private String objectId;
 	private String subject;
 	private Calendar startDatetime;
 	private Calendar endDatetime;
+	private String joinWebUrl;
 	
 	public OnlineMeetingModel() {
 	}
@@ -34,5 +37,22 @@ public class OnlineMeetingModel {
 		this.endDatetime = endDatetime;
 	}
 
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}
+
+	public String getJoinWebUrl() {
+		return joinWebUrl;
+	}
+
+	public void setJoinWebUrl(String joinWebUrl) {
+		this.joinWebUrl = joinWebUrl;
+	}
+
+	
 	
 }

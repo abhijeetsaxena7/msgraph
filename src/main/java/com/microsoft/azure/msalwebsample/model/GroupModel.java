@@ -1,6 +1,9 @@
 package com.microsoft.azure.msalwebsample.model;
 
-public class GroupModel {
+import java.io.Serializable;
+
+public class GroupModel implements Serializable{
+	private String objectId;
 	private String displayName;
 	private String description;
 	
@@ -22,4 +25,14 @@ public class GroupModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}
+	
+	
 }

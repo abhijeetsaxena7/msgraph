@@ -224,6 +224,7 @@ public class AuthHelper {
 		scopes.addAll(helper.getAuthScopes(AuthScope.User.Create.values()));
 		scopes.addAll(helper.getAuthScopes(AuthScope.User.Update.values()));
 		scopes.addAll(helper.getAuthScopes(AuthScope.User.Delete.values()));
+		scopes.addAll(helper.getAuthScopes(AuthScope.User.AddRole.values()));
 		scopes.addAll(helper.getAuthScopes(AuthScope.Group.Create.values()));
 		scopes.addAll(helper.getAuthScopes(AuthScope.Group.Delete.values()));
 		scopes.addAll(helper.getAuthScopes(AuthScope.Group.AddMember.values()));

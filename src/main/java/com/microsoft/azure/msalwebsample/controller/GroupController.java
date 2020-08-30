@@ -57,7 +57,8 @@ public class GroupController {
 			HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());			
 			IGroupCollectionRequest groupReq = graphClientWrapper.getGraphServiceClient().groups().buildRequest(Arrays.asList(option));
 			Group res = groupReq.post(group);
-			resEntity = new ResponseEntity<Group>(res,HttpStatus.CREATED);
+			groupModel.setObjectId(res.id);
+			resEntity = new ResponseEntity<>(groupModel,HttpStatus.CREATED);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			resEntity = new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -110,7 +111,6 @@ public class GroupController {
 			for(String memberId:memberIds) {
 				members.add(authHelper.getMsGraphEndpointHost()+"v1.0/directoryObjects/"+memberId);
 			}
-//			members.add("https://graph.microsoft.com/v1.0/directoryObjects/3188014a-237a-4956-9c19-cf44bb4ea15a");
 			
 			Group group = new Group();
 			group.additionalDataManager().put("members@odata.bind", members);

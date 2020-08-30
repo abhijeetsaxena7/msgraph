@@ -42,7 +42,7 @@ public class AuthPageController {
     }
 
     
-    @RequestMapping("/msal4jsample/secure/aad")
+//    @RequestMapping("/msal4jsample/secure/aad")
     public ModelAndView securePage(HttpServletRequest httpRequest) throws ParseException {
         ModelAndView mav = new ModelAndView("auth_page");
 

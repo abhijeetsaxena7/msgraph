@@ -1,8 +1,10 @@
 package com.microsoft.azure.msalwebsample.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class UserModel {	
+public class UserModel implements Serializable {	
+	private String objectId;
 	private String defaultPassword;
 	private String displayName;
 	//format -userName@domain.com domain should be defined in settings by IT admin in integrated project. E.g username@libsys366.onmicrosoft.com
@@ -10,7 +12,6 @@ public class UserModel {
 	private Calendar dob;
 	private String department;
 	private String mailNickname;
-	private String roleId;
 	public UserModel() {
 	}
 	public String getDefaultPassword() {
@@ -49,4 +50,10 @@ public class UserModel {
 	public void setMailNickname(String mailNickname) {
 		this.mailNickname = mailNickname;
 	}
+	public String getObjectId() {
+		return objectId;
+	}
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}	
 }

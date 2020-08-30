@@ -49,8 +49,10 @@ public class MeetingController {
 			HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());
 			
 			IOnlineMeetingCollectionRequest req = graphClientWrapper.getGraphServiceClient().me().onlineMeetings().buildRequest(Arrays.asList(option));
-			OnlineMeeting res = req.post(meeting);			
-			resEntity = new ResponseEntity<OnlineMeeting>(res,HttpStatus.CREATED);
+			OnlineMeeting res = req.post(meeting);		
+			onlineMeetingModel.setObjectId(res.id);
+			onlineMeetingModel.setJoinWebUrl(res.joinWebUrl);
+			resEntity = new ResponseEntity<>(onlineMeetingModel,HttpStatus.CREATED);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			resEntity = new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);

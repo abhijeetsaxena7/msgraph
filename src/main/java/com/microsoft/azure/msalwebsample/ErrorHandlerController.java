@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Endpoint where errors will be redirected
  */
-@Controller
+//@Controller
 public class ErrorHandlerController implements ErrorController {
 
     private static final String PATH = "/error";

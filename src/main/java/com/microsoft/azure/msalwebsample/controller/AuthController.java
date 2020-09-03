@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.microsoft.azure.msalwebsample.config.BasicConfiguration;
 
 @RestController
@@ -23,7 +24,8 @@ public class AuthController {
 	@GetMapping("/redirectUri")
 	public void sendRedirectResponse(HttpServletRequest request, HttpServletResponse response) {
 		
-		try {
+		try {			
+			request.setAttribute("email", ((IAuthenticationResult)request.getSession().getAttribute("principal")).account().username());
 			response.sendRedirect(basicConfig.getRedirectResponseUri());
 		} catch (IOException e) {
 			e.printStackTrace();

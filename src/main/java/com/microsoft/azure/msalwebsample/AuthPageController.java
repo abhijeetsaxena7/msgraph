@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.microsoft.aad.msal4j.*;
 import com.microsoft.azure.msalwebsample.config.AuthHelper;
-import com.microsoft.azure.msalwebsample.config.AuthScope;
+import com.microsoft.azure.msalwebsample.config.MicrosoftScopes;
 import com.microsoft.azure.msalwebsample.config.SessionManagementHelper;
 import com.nimbusds.jwt.JWTParser;
 import org.json.JSONObject;

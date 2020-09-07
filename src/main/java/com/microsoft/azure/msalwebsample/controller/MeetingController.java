@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.microsoft.azure.msalwebsample.config.AuthHelper;
-import com.microsoft.azure.msalwebsample.config.AuthScope;
+import com.microsoft.azure.msalwebsample.config.MicrosoftScopes;
 import com.microsoft.azure.msalwebsample.config.GraphServiceClientWrapper;
 import com.microsoft.azure.msalwebsample.config.HelperMethods;
 import com.microsoft.azure.msalwebsample.model.OnlineMeetingModel;
@@ -39,7 +39,7 @@ public class MeetingController {
 	public ResponseEntity createMeeting(HttpServletRequest request, HttpServletResponse response, @RequestBody OnlineMeetingModel onlineMeetingModel){
 		ResponseEntity resEntity;
 		try {
-			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(AuthScope.Meeting.Create.values()));
+			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(MicrosoftScopes.Meeting.Create.values()));
 			
 			OnlineMeeting meeting = new OnlineMeeting();
 			meeting.subject = onlineMeetingModel.getSubject();
@@ -64,7 +64,7 @@ public class MeetingController {
 	public ResponseEntity deleteMeeting(HttpServletRequest request, HttpServletResponse response, @RequestParam String meetingId){
 		ResponseEntity resEntity;
 		try {
-			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(AuthScope.Meeting.Delete.values()));
+			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(MicrosoftScopes.Meeting.Delete.values()));
 						
 			HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());
 			

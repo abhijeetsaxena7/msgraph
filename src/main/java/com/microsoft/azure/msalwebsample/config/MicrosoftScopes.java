@@ -2,7 +2,7 @@ package com.microsoft.azure.msalwebsample.config;
 
 import java.util.Set;
 
-public interface AuthScope {
+public interface MicrosoftScopes {
 	String baseEndPoint = "https://graph.microsoft.com/";
 	
 	interface BaseScope{

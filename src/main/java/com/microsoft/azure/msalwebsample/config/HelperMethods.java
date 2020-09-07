@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import com.microsoft.azure.msalwebsample.config.AuthScope.BaseScope;
+import com.microsoft.azure.msalwebsample.config.MicrosoftScopes.BaseScope;
 
 @Component
 public class HelperMethods {	

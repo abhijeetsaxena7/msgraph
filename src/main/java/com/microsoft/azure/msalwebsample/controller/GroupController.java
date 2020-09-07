@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.JsonArray;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.microsoft.azure.msalwebsample.config.AuthHelper;
-import com.microsoft.azure.msalwebsample.config.AuthScope;
+import com.microsoft.azure.msalwebsample.config.MicrosoftScopes;
 import com.microsoft.azure.msalwebsample.config.GraphServiceClientWrapper;
 import com.microsoft.azure.msalwebsample.config.HelperMethods;
 import com.microsoft.azure.msalwebsample.model.GroupModel;
@@ -43,7 +43,7 @@ public class GroupController {
 	public ResponseEntity createGroup(HttpServletRequest request, HttpServletResponse response, @RequestBody GroupModel groupModel){
 		ResponseEntity resEntity;
 		try {
-			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(AuthScope.Group.Create.values()));			
+			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(MicrosoftScopes.Group.Create.values()));			
 			Group group = new Group();
 			group.displayName = groupModel.getDisplayName();
 			group.description = groupModel.getDescription();
@@ -70,7 +70,7 @@ public class GroupController {
 	public ResponseEntity<String> deleteGroup(HttpServletRequest request, HttpServletResponse response, @RequestParam String groupId){
 		ResponseEntity<String> resEntity;
 		try {
-			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(AuthScope.Group.Delete.values()));			
+			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(MicrosoftScopes.Group.Delete.values()));			
 			
 			HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());			
 			graphClientWrapper.getGraphServiceClient().groups(groupId).buildRequest(Arrays.asList(option)).delete();
@@ -86,7 +86,7 @@ public class GroupController {
 	public ResponseEntity<String> addGroupOwner(HttpServletRequest request, HttpServletResponse response, @RequestParam String groupId, @RequestParam String userId){
 		ResponseEntity<String> resEntity;
 		try {
-			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(AuthScope.Group.AddOwner.values()));			
+			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(MicrosoftScopes.Group.AddOwner.values()));			
 			
 			DirectoryObject userObject= new DirectoryObject();
 			userObject.id =userId;
@@ -105,7 +105,7 @@ public class GroupController {
 	public ResponseEntity<String> addGroupMember(HttpServletRequest request, HttpServletResponse response, @RequestParam String groupId, @RequestParam List<String> memberIds){
 		ResponseEntity<String> resEntity;
 		try {
-			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(AuthScope.Group.AddMember.values()));
+			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(MicrosoftScopes.Group.AddMember.values()));
 			
 			JsonArray members = new JsonArray();
 			for(String memberId:memberIds) {
@@ -128,7 +128,7 @@ public class GroupController {
 	public ResponseEntity<String> deleteGroupOwner(HttpServletRequest request, HttpServletResponse response, @RequestParam String groupId, @RequestParam String userId){
 		ResponseEntity<String> resEntity;
 		try {
-			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(AuthScope.Group.DeleteOwner.values()));			
+			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(MicrosoftScopes.Group.DeleteOwner.values()));			
 			
 			HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());			
 			graphClientWrapper.getGraphServiceClient().groups(groupId).owners(userId).reference().buildRequest(Arrays.asList(option)).delete();
@@ -144,7 +144,7 @@ public class GroupController {
 	public ResponseEntity<String> deleteGroupMember(HttpServletRequest request, HttpServletResponse response, @RequestParam String groupId, @RequestParam String memberId){
 		ResponseEntity<String> resEntity;
 		try {
-			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(AuthScope.Group.DeleteMember.values()));
+			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response, helper.getReqScopes(MicrosoftScopes.Group.DeleteMember.values()));
 			
 			HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());			
 			graphClientWrapper.getGraphServiceClient().groups(groupId).members(memberId).reference().buildRequest(Arrays.asList(option)).delete();

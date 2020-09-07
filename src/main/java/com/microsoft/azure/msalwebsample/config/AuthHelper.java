@@ -82,9 +82,10 @@ public class AuthHelper {
 		for (String key : httpRequest.getParameterMap().keySet()) {
 			params.put(key, Collections.singletonList(httpRequest.getParameterMap().get(key)[0]));
 		}
+		System.out.println(httpRequest.getParameter(SessionManagementHelper.STATE));
 		// validate that state in response equals to state in request
 		StateData stateData = SessionManagementHelper.validateState(httpRequest.getSession(),
-				params.get(SessionManagementHelper.STATE).get(0));
+				httpRequest.getParameter(SessionManagementHelper.STATE));
 
 		AuthenticationResponse authResponse = AuthenticationResponseParser.parse(new URI(fullUrl), params);
 		if (AuthHelper.isAuthenticationSuccessful(authResponse)) {
@@ -155,7 +156,7 @@ public class AuthHelper {
 		// parameter to validate idToken
 		String state = UUID.randomUUID().toString();
 		String nonce = UUID.randomUUID().toString();
-
+		System.out.println(state+"---------state value \n\n");
 		SessionManagementHelper.storeStateAndNonceInSession(httpRequest.getSession(), state, nonce);
 
 		httpResponse.setStatus(302);
@@ -221,18 +222,18 @@ public class AuthHelper {
 	
 	public Set<String>getAllScopes() {
 		Set<String> scopes = new HashSet<String>();
-		scopes.addAll(helper.getAuthScopes(AuthScope.User.Create.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.User.Update.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.User.Delete.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.User.AddRole.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.Group.Create.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.Group.Delete.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.Group.AddMember.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.Group.AddOwner.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.Group.DeleteMember.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.Group.DeleteOwner.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.Meeting.Create.values()));
-		scopes.addAll(helper.getAuthScopes(AuthScope.Meeting.Delete.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.User.Create.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.User.Update.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.User.Delete.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.User.AddRole.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.Group.Create.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.Group.Delete.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.Group.AddMember.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.Group.AddOwner.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.Group.DeleteMember.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.Group.DeleteOwner.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.Meeting.Create.values()));
+		scopes.addAll(helper.getAuthScopes(MicrosoftScopes.Meeting.Delete.values()));
 		return scopes;
 	}
 

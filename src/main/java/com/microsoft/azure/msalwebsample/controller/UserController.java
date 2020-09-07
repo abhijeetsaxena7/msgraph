@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.microsoft.azure.msalwebsample.config.AuthHelper;
-import com.microsoft.azure.msalwebsample.config.AuthScope;
+import com.microsoft.azure.msalwebsample.config.MicrosoftScopes;
 import com.microsoft.azure.msalwebsample.config.GraphServiceClientWrapper;
 import com.microsoft.azure.msalwebsample.config.HelperMethods;
 import com.microsoft.azure.msalwebsample.model.UserModel;
@@ -44,7 +44,7 @@ public class UserController {
 		ResponseEntity resEntity;
 		try {
 			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response,
-					helper.getReqScopes(AuthScope.User.Create.values()));
+					helper.getReqScopes(MicrosoftScopes.User.Create.values()));
 			User user = new User();
 			user.accountEnabled = true;
 			user.displayName = userModel.getDisplayName();
@@ -79,7 +79,7 @@ public class UserController {
 		ResponseEntity<String> resEntity;
 		try {
 			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response,
-					helper.getReqScopes(AuthScope.User.Delete.values()));
+					helper.getReqScopes(MicrosoftScopes.User.Delete.values()));
 
 			HeaderOption option = new HeaderOption("Authorization", "Bearer " + result.accessToken());
 			graphClientWrapper.getGraphServiceClient().users(userId).buildRequest(Arrays.asList(option)).delete();
@@ -97,7 +97,7 @@ public class UserController {
 		ResponseEntity<String> resEntity;
 		try {
 			IAuthenticationResult result = authHelper.getAuthResultBySilentFlow(request, response,
-					helper.getReqScopes(AuthScope.User.AddRole.values()));
+					helper.getReqScopes(MicrosoftScopes.User.AddRole.values()));
 			
 			AppRoleAssignment roleAssignment = new AppRoleAssignment();
 			roleAssignment.principalId = UUID.fromString(assignedToId);

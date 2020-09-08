@@ -26,6 +26,8 @@ public class SessionManagementHelper {
     static final String FAILED_TO_VALIDATE_MESSAGE = "Failed to validate data received from Authorization service - ";
 
     static StateData validateState(HttpSession session, String state) throws Exception {
+    	System.out.println(state+"------received state value");
+    	System.out.println(session.getId()+"------received sessionId");
         if (StringUtils.isNotEmpty(state)) {
             StateData stateDataInSession = removeStateFromSession(session, state);
             if (stateDataInSession != null) {
@@ -69,6 +71,8 @@ public class SessionManagementHelper {
         if (session.getAttribute(STATES) == null) {
             session.setAttribute(STATES, new HashMap<String, StateData>());
         }
+        System.out.println(session.getId()+"-----sessionId");
+        System.out.println(state+"----state in session");
         ((Map<String, StateData>) session.getAttribute(STATES)).put(state, new StateData(nonce, new Date()));
     }
 

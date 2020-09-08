@@ -85,7 +85,6 @@ public class AuthHelper {
 		// validate that state in response equals to state in request
 		StateData stateData = SessionManagementHelper.validateState(httpRequest.getSession(),
 				params.get(SessionManagementHelper.STATE).get(0));
-		System.out.println(httpRequest.getParameter(SessionManagementHelper.STATE));
 		// validate that state in response equals to state in request
 
 		AuthenticationResponse authResponse = AuthenticationResponseParser.parse(new URI(fullUrl), params);
@@ -157,7 +156,6 @@ public class AuthHelper {
 		// parameter to validate idToken
 		String state = UUID.randomUUID().toString();
 		String nonce = UUID.randomUUID().toString();
-		System.out.println(state+"---------state value \n\n");
 		SessionManagementHelper.storeStateAndNonceInSession(httpRequest.getSession(), state, nonce);
 
 		httpResponse.setStatus(302);

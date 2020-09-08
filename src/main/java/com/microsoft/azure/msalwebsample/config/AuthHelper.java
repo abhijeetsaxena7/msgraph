@@ -83,30 +83,30 @@ public class AuthHelper {
 			params.put(key, Collections.singletonList(httpRequest.getParameterMap().get(key)[0]));
 		}
 		// validate that state in response equals to state in request
-		StateData stateData = SessionManagementHelper.validateState(httpRequest.getSession(),
-				params.get(SessionManagementHelper.STATE).get(0));
+//		StateData stateData = SessionManagementHelper.validateState(httpRequest.getSession(),
+//				params.get(SessionManagementHelper.STATE).get(0));
 		// validate that state in response equals to state in request
 
-		AuthenticationResponse authResponse = AuthenticationResponseParser.parse(new URI(fullUrl), params);
-		if (AuthHelper.isAuthenticationSuccessful(authResponse)) {
-			AuthenticationSuccessResponse oidcResponse = (AuthenticationSuccessResponse) authResponse;
-			// validate that OIDC Auth Response matches Code Flow (contains only requested
-			// artifacts)
-			validateAuthRespMatchesAuthCodeFlow(oidcResponse);
+//		AuthenticationResponse authResponse = AuthenticationResponseParser.parse(new URI(fullUrl), params);
+//		if (AuthHelper.isAuthenticationSuccessful(authResponse)) {
+//			AuthenticationSuccessResponse oidcResponse = (AuthenticationSuccessResponse) authResponse;
+//			// validate that OIDC Auth Response matches Code Flow (contains only requested
+//			// artifacts)
+//			validateAuthRespMatchesAuthCodeFlow(oidcResponse);
 
-			IAuthenticationResult result = getAuthResultByAuthCode(httpRequest, oidcResponse.getAuthorizationCode(),
+			IAuthenticationResult result = getAuthResultByAuthCode(httpRequest, httpRequest.getParameter("code"),
 					currentUri);
 
 			// validate nonce to prevent reply attacks (code maybe substituted to one with
 			// broader access)
-			validateNonce(stateData, getNonceClaimValueFromIdToken(result.idToken()));
+//			validateNonce(stateData, getNonceClaimValueFromIdToken(result.idToken()));
 
 			SessionManagementHelper.setSessionPrincipal(httpRequest, result);
-		} else {
-			AuthenticationErrorResponse oidcResponse = (AuthenticationErrorResponse) authResponse;
-			throw new Exception(String.format("Request for auth code failed: %s - %s",
-					oidcResponse.getErrorObject().getCode(), oidcResponse.getErrorObject().getDescription()));
-		}
+//		} else {
+//			AuthenticationErrorResponse oidcResponse = (AuthenticationErrorResponse) authResponse;
+//			throw new Exception(String.format("Request for auth code failed: %s - %s",
+//					oidcResponse.getErrorObject().getCode(), oidcResponse.getErrorObject().getDescription()));
+//		}
 	}
 
 	public IAuthenticationResult getAuthResultBySilentFlow(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Set<String>scopes)
@@ -156,7 +156,7 @@ public class AuthHelper {
 		// parameter to validate idToken
 		String state = UUID.randomUUID().toString();
 		String nonce = UUID.randomUUID().toString();
-		SessionManagementHelper.storeStateAndNonceInSession(httpRequest.getSession(), state, nonce);
+//		SessionManagementHelper.storeStateAndNonceInSession(httpRequest.getSession(true), state, nonce);
 
 		httpResponse.setStatus(302);
 		String authorizationCodeUrl = getAuthorizationCodeUrl(httpRequest.getParameter("claims"), scope, redirectURL,
@@ -169,7 +169,7 @@ public class AuthHelper {
 		
 		AuthorizationRequestUrlParameters parameters = AuthorizationRequestUrlParameters
 				.builder(registeredRedirectURL, getAllScopes())
-				.responseMode(ResponseMode.QUERY).prompt(Prompt.SELECT_ACCOUNT).state(state).nonce(nonce)
+				.responseMode(ResponseMode.QUERY).prompt(Prompt.SELECT_ACCOUNT)/*.state(state).nonce(nonce)*/
 				.claimsChallenge(claims).build();
 		
 		ConfidentialClientApplication cca = null;
@@ -183,14 +183,14 @@ public class AuthHelper {
 	}
 
 	private IAuthenticationResult getAuthResultByAuthCode(HttpServletRequest httpServletRequest,
-			AuthorizationCode authorizationCode, String currentUri) throws Throwable {
+			String authCode, String currentUri) throws Throwable {
 
 		IAuthenticationResult result;
 		ConfidentialClientApplication app;
 		try {
 			app = createClientApplication();
 
-			String authCode = authorizationCode.getValue();
+//			String authCode = authorizationCode.getValue();
 			AuthorizationCodeParameters parameters = AuthorizationCodeParameters.builder(authCode, new URI(currentUri))
 					.build();
 

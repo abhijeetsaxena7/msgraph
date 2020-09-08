@@ -82,10 +82,11 @@ public class AuthHelper {
 		for (String key : httpRequest.getParameterMap().keySet()) {
 			params.put(key, Collections.singletonList(httpRequest.getParameterMap().get(key)[0]));
 		}
-		System.out.println(httpRequest.getParameter(SessionManagementHelper.STATE));
 		// validate that state in response equals to state in request
 		StateData stateData = SessionManagementHelper.validateState(httpRequest.getSession(),
-				httpRequest.getParameter(SessionManagementHelper.STATE));
+				params.get(SessionManagementHelper.STATE).get(0));
+		System.out.println(httpRequest.getParameter(SessionManagementHelper.STATE));
+		// validate that state in response equals to state in request
 
 		AuthenticationResponse authResponse = AuthenticationResponseParser.parse(new URI(fullUrl), params);
 		if (AuthHelper.isAuthenticationSuccessful(authResponse)) {

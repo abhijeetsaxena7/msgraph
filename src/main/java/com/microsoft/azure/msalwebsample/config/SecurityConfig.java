@@ -12,6 +12,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity security) throws Exception {
         //Disable Spring's basic security settings as they are not relevant for this sample
-        security.httpBasic().disable().csrf().disable();
+        security.httpBasic().disable().csrf().disable().cors().disable();
     }
 }
